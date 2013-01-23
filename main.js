@@ -1,6 +1,6 @@
 var Hapi = require('hapi');
 
-var server = new Hapi.Server(+process.env.PORT, '0.0.0.0');
+var server = new Hapi.Server(+process.env.PORT);
 
 server.addRoute({ method: 'GET', path: '/{param?}', handler: welcome });
 
