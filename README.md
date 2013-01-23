@@ -12,4 +12,5 @@ Before cloning this repository and reploying to heroku install the [Heroku Toolb
 2. `heroku login`
 3. `heroku create`
 4. `git push heroku master`
+5. `heroku ps:scale web=1`
 5. `heroku open`
