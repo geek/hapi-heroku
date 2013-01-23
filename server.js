@@ -1,6 +1,6 @@
 var Hapi = require('hapi');
 
-var server = new Hapi.Server(+process.env.PORT);
+var server = new Hapi.Server(+process.env.PORT, 'http://sleepy-ocean-2065.herokuapp.com/');
 
 server.addRoute({ method: 'GET', path: '/{param?}', handler: welcome });
 
