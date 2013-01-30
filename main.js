@@ -1,6 +1,5 @@
 var Hapi = require('hapi');
 
-/ Declare internals
 
 var internals = {};
 
