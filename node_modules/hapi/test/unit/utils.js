@@ -1,7 +1,7 @@
 // Load modules
 
-var Chai = require('chai');
-var Hapi = require('../helpers');
+var Lab = require('lab');
+var Hapi = require('../..');
 var Package = require('../../package.json');
 
 
@@ -12,7 +12,11 @@ var internals = {};
 
 // Test shortcuts
 
-var expect = Chai.expect;
+var expect = Lab.expect;
+var before = Lab.before;
+var after = Lab.after;
+var describe = Lab.experiment;
+var it = Lab.test;
 
 
 describe('Utils', function () {

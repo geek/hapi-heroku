@@ -1,7 +1,7 @@
 // Load modules
 
-var NodeUtil = require('util');
 var Cacheable = require('./cacheable');
+var Utils = require('../utils');
 
 
 // Declare internals
@@ -14,21 +14,25 @@ var internals = {};
 exports = module.exports = internals.Text = function (text, type) {
 
     Cacheable.call(this);
-    this._tag = 'text';
+    this.variety = 'text';
+    this.varieties.text = true;
 
     this.message(text, type);
 
     return this;
 };
 
-NodeUtil.inherits(internals.Text, Cacheable);
+Utils.inherits(internals.Text, Cacheable);
 
 
-internals.Text.prototype.message = function (text, type) {
+internals.Text.prototype.message = function (text, type, encoding) {
 
-    this._payload = text || '';
+    if (text) {
+        this._payload = [text];
+    }
+
     this._headers['Content-Type'] = type || 'text/html';
-    this._headers['Content-Length'] = Buffer.byteLength(this._payload);
+    this._flags.encoding = encoding || 'utf-8';
 
     return this;
 };

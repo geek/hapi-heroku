@@ -31,7 +31,7 @@ internals.main = function () {
 
     var http = new Hapi.Server(8080);
 
-    http.addRoutes([
+    http.route([
         { method: 'GET', path: '/', config: { handler: internals.get, validate: { query: { username: S() } } } },
         { method: 'GET', path: '/admin', config: { handler: internals.get, validate: { query: { username: S().required().with('password'), password: S() } } } },
         { method: 'GET', path: '/users', config: { handler: internals.get, validate: { query: { email: S().email().required().min(18) } } } },
@@ -47,7 +47,7 @@ internals.main = function () {
         participants: A().includes(S(), N())
     };
 
-    http.addRoute({ method: 'POST', path: '/users/{id}', config: { handler: internals.payload, validate: { query: {}, schema: schema } } });
+    http.route({ method: 'POST', path: '/users/{id}', config: { handler: internals.payload, validate: { query: {}, payload: schema } } });
 
     http.start();
 };
@@ -59,10 +59,10 @@ internals.main();
     Try various URLs like:
     http://localhost:8080/ // success
     http://localhost:8080/?username=test // success
-    http://localhost:8080/admin?username=walmart&password=worldofwalmartlabs // success
-    http://localhost:8080/admin?username=walmart // fail
-    http://localhost:8080/users?email=vnguyen@walmart.com // success
-    http://localhost:8080/users?email=@walmart.com // fail
+    http://localhost:8080/admin?username=steve&password=shhhhhh // success
+    http://localhost:8080/admin?username=steve // fail
+    http://localhost:8080/users?email=steve@example.com // success
+    http://localhost:8080/users?email=@example.com // fail
     http://localhost:8080/config?choices=1&choices=2 // success
     http://localhost:8080/config?choices=1 // success
     http://localhost:8080/config // fail

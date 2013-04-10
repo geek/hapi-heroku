@@ -12,7 +12,7 @@
   "readmeFilename": "README.md",
   "gitHead": "361f1f7cc13cbfcf12497b2d4c8654abea865d26",
   "dependencies": {
-      "hapi": "0.11.3"
+      "hapi": "0.16.x"
   },
   "engines": {
     "node": ">=0.8.0"

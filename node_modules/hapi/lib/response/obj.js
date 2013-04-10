@@ -1,8 +1,8 @@
 // Load modules
 
-var NodeUtil = require('util');
 var Cacheable = require('./cacheable');
-
+var SafeStringify = require('json-stringify-safe')
+var Utils = require('../utils');
 
 // Declare internals
 
@@ -11,17 +11,26 @@ var internals = {};
 
 // Obj response (Base -> Generic -> Cacheable -> Obj)
 
-exports = module.exports = internals.Obj = function (object, type) {
+exports = module.exports = internals.Obj = function (object, type, encoding) {
 
     Cacheable.call(this);
-    this._tag = 'obj';
+    this.variety = 'obj';
+    this.varieties.obj = true;
 
-    this._payload = JSON.stringify(object);                                 // Convert immediately to snapshot content
-    this._raw = object;                                                     // Can change if reference is modified
-    this._headers['Content-Type'] = type || 'application/json';
-    this._headers['Content-Length'] = Buffer.byteLength(this._payload);
+    // Convert immediately to snapshot content
+
+    this.raw = object;              // Can change if reference is modified
+    this.update(type, encoding);
 
     return this;
 };
 
-NodeUtil.inherits(internals.Obj, Cacheable);
+Utils.inherits(internals.Obj, Cacheable);
+
+
+internals.Obj.prototype.update = function (type, encoding) {
+
+    this._payload = [SafeStringify(this.raw)];
+    this._headers['Content-Type'] = type || this._headers['Content-Type'] || 'application/json';
+    this._flags.encoding = encoding || 'utf-8';
+};

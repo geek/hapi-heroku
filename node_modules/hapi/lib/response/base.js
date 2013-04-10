@@ -13,9 +13,12 @@ var internals = {};
 exports = module.exports = internals.Base = function () {
 
     Utils.assert(this.constructor !== internals.Base, 'Base must not be instantiated directly');
-    this._tag = 'base';
+    this.variety = 'base';
+    this.varieties = { base: true };
+
     this._flags = {};           // Cached
-    this._states = [];          // Not cached
+    this._states = {};          // Not cached
+    this._wasPrepared = false;
 
     return this;
 };
@@ -28,12 +31,6 @@ internals.Base.prototype.ttl = function (ttl) {
 };
 
 
-internals.Base.prototype.getTtl = function () {
-
-    return this._code === 200 ? this._flags.ttl : 0;
-};
-
-
 internals.Base.prototype.state = function (name, value, options) {          // options: see Defaults.state
 
     var state = {
@@ -42,10 +39,11 @@ internals.Base.prototype.state = function (name, value, options) {          // o
     };
 
     if (options) {
+        Utils.assert(!options.autoValue, 'Cannot set autoValue directly in a response');
         state.options = Utils.clone(options);
     }
 
-    this._states.push(state);
+    this._states[name] = state;
     return this;
 };
 
@@ -54,14 +52,20 @@ internals.Base.prototype.unstate = function (name) {
 
     var state = {
         name: name,
-        value: '',
         options: {
             ttl: 0
         }
     };
 
-    this._states.push(state);
+    this._states[name] = state;
     return this;
+};
+
+
+internals.Base.prototype._prepare = function (request, callback) {
+
+    this._wasPrepared = true;
+    return callback(this);
 };
 
 
