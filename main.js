@@ -6,9 +6,9 @@ var internals = {};
 
 // Type shortcuts
 
-var S = Hapi.Types.String;
-var N = Hapi.Types.Number;
-var A = Hapi.Types.Array;
+var S = Hapi.types.String;
+var N = Hapi.types.Number;
+var A = Hapi.types.Array;
 
 
 internals.get = function (request) {
@@ -55,7 +55,7 @@ server.addRoutes([
     { method: 'GET', path: '/test', config: { handler: internals.get, validate: { query: { num: N().min(0) } } } },
     { method: 'GET', path: '/test2', config: { handler: internals.get, validate: { query: { p1: S().required().rename('itemId') } } } },
     { method: 'GET', path: '/simple', config: { handler: internals.get, validate: { query: { input: S().min(3) } } } },
-    { method: 'GET', path: '/output', config: { handler: internals.output, validate: { query: { input: S().min(3) } }, response: { schema: { myOutput: S().min(3) } } } },
+    { method: 'GET', path: '/output', config: { handler: internals.output, validate: { query: { input: S().min(3) } } } },
     { method: 'GET', path: '/users/{id}', config: { description: 'Get a user', handler: internals.get, validate: { path: { id: N().required() }, query: { name: S().description('the user name').required() } } } },
     { method: 'GET', path: '/redirect', config: { handler: internals.redirect } },
     { method: 'GET', path: '/error', config: { handler: internals.error } }
