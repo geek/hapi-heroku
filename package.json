@@ -1,6 +1,6 @@
 {
   "name": "hapi-heroku",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "hapi example app running on heroku",
   "main": "main.js",
   "repository": {
@@ -10,11 +10,10 @@
   "author": "Wyatt Preul",
   "license": "MIT",
   "readmeFilename": "README.md",
-  "gitHead": "361f1f7cc13cbfcf12497b2d4c8654abea865d26",
   "dependencies": {
-      "hapi": "0.16.x"
+      "hapi": "1.8.x"
   },
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">=0.10.0"
   }
 }
