@@ -1,4 +1,5 @@
 var Hapi = require('hapi');
+var Joi = require('joi');
 
 
 var internals = {};
@@ -6,74 +7,72 @@ var internals = {};
 
 // Type shortcuts
 
-var S = Hapi.types.String;
-var N = Hapi.types.Number;
-var A = Hapi.types.Array;
+var S = Joi.string;
+var N = Joi.number;
+var A = Joi.array;
 
 
-internals.get = function (request) {
 
-    request.reply('Success!\n');
+internals.get = function (request, reply) {
+
+    reply('Success!\n');
 };
 
 
-internals.output = function (request) {
+internals.output = function (request, reply) {
 
-    request.reply({ myOutput: request.query.input });
+    reply({ myOutput: request.query.input });
 };
 
 
-internals.payload = function (request) {
+internals.payload = function (request, reply) {
 
-    request.reply('Success!\n');
+    reply('Success!\n');
 };
 
 
-internals.echo = function (request) {
+internals.echo = function (request, reply) {
 
-    request.reply(request.payload);
+    reply(request.payload);
 };
 
-internals.redirect = function (request) {
+internals.redirect = function (request, reply) {
 
-    request.reply.redirect('/error').send();
+    reply.redirect('/error');
 };
 
-internals.error = function (request) {
+internals.error = function (request, reply) {
 
-    request.reply('This is my error');
+    reply('This is my error');
 };
 
-var server = new Hapi.Server(+process.env.PORT, '0.0.0.0');
+var server = new Hapi.Server(~~process.env.PORT || 3000, '0.0.0.0');
 
-server.addRoutes([
+server.route([
     { method: 'GET', path: '/', config: { handler: internals.get, validate: { query: { username: S() } } } },
-    { method: 'POST', path: '/', config: { handler: internals.echo, payload: 'parse' } },
-    { method: 'GET', path: '/admin', config: { handler: internals.get, validate: { query: { username: S().required().with('password'), password: S() } } } },
+    { method: 'POST', path: '/', config: { handler: internals.echo, payload: { parse: true } } },
+    { method: 'GET', path: '/admin', config: { handler: internals.get, validate: { query: { username: S().required(), password: S().required() } } } },
     { method: 'GET', path: '/users', config: { handler: internals.get, validate: { query: { email: S().email().required().min(18) } } } },
     { method: 'GET', path: '/config', config: { handler: internals.get, validate: { query: { choices: A().required() } } } },
     { method: 'GET', path: '/test', config: { handler: internals.get, validate: { query: { num: N().min(0) } } } },
-    { method: 'GET', path: '/test2', config: { handler: internals.get, validate: { query: { p1: S().required().rename('itemId') } } } },
-    { method: 'GET', path: '/simple', config: { handler: internals.get, validate: { query: { input: S().min(3) } } } },
     { method: 'GET', path: '/output', config: { handler: internals.output, validate: { query: { input: S().min(3) } } } },
-    { method: 'GET', path: '/users/{id}', config: { description: 'Get a user', handler: internals.get, validate: { path: { id: N().required() }, query: { name: S().description('the user name').required() } } } },
+    { method: 'GET', path: '/users/{id}', config: { description: 'Get a user', handler: internals.get, validate: { params: { id: N().required() }, query: { name: S().description('the user name').required() } } } },
     { method: 'GET', path: '/redirect', config: { handler: internals.redirect } },
     { method: 'GET', path: '/error', config: { handler: internals.error } }
 ]);
 
-var schema = {
-    title: S().invalid('director'),
-    status: S().valid('open', 'pending', 'close'),
-    participants: A().includes(S(), N())
-};
+var schema = Joi.object().keys({
+    title: S().required().invalid('director'),
+    status: S().required().valid('open', 'pending', 'close'),
+    participants: A().required().includes(S(), N()).min(2)
+});
 
-server.addRoute({
+server.route({
     method: 'POST',
     path: '/users/{id}',
     config: {
         handler: internals.payload,
         validate: {
-            query: {},
             payload: schema
         }
     }
@@ -81,6 +80,5 @@ server.addRoute({
 
 server.start(function () {
 
-    server.settings.uri = process.env.HOST ? 'http://' + process.env.HOST + ':' + process.env.PORT : server.settings.uri;
-    console.log('Server started at ' + server.settings.uri);
+    console.log('Server started at [' + server.info.uri + ']');
 });

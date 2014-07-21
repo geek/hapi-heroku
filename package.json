@@ -11,9 +11,10 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-      "hapi": "1.8.x"
+    "hapi": "^6.2.0",
+    "joi": "^4.6.1"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=0.10.x"
   }
 }
