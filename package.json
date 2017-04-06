@@ -11,10 +11,13 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "hapi": "^6.2.0",
-    "joi": "^4.6.1"
+    "hapi": "^16.1.1",
+    "joi": "^10.4.1"
   },
   "engines": {
     "node": ">=0.10.x"
+  },
+  "scripts": {
+    "start": "node main.js"
   }
 }
